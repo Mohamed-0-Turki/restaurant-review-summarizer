@@ -2,11 +2,22 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import List
 from transformers import pipeline
+from fastapi.middleware.cors import CORSMiddleware
 
 # Initialize summarizer
 summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
 
 app = FastAPI()
+
+# Allow requests from your frontend origin
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # Add your frontend's URL here
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 class Review(BaseModel):
     id: int
